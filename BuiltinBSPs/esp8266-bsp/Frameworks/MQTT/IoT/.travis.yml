@@ -1,0 +1,30 @@
+language: cpp
+before_install:
+- sudo apt-get -qq update
+- sudo apt-get install -y python-serial srecord
+install:
+- mkdir tools && cd tools
+- git clone https://github.com/themadinventor/esptool.git
+- wget https://github.com/nodemcu/nodemcu-firmware/raw/master/tools/esp-open-sdk.tar.gz
+- tar -zxvf esp-open-sdk.tar.gz
+- export PATH=$PATH:$PWD/esp-open-sdk/xtensa-lx106-elf/bin
+- chmod +x $PWD/esptool/esptool.py
+- export ESPTOOL=$PWD/esptool/esptool.py
+- wget http://bbs.espressif.com/download/file.php?id=1690 -O ESP8266_NONOS_SDK_V2.0.0_16_08_10.zip
+- unzip ESP8266_NONOS_SDK_V2.0.0_16_08_10.zip
+- export SDK_BASE=$PWD/ESP8266_NONOS_SDK
+- cd ..
+script:
+- ls
+- cp include/user_config.sample.h include/user_config.local.h
+- make
+- cd firmware/
+- srec_cat -output ${file_name} -binary esp_mqtt0x00000.bin -binary -fill 0xff 0x00000 0x10000 esp_mqtt0x10000.bin -binary -offset 0x10000
+deploy:
+provider: releases
+api_key:
+file: "$TRAVIS_BUILD_DIR/firmware/${file_name}"
+skip_cleanup: true
+on:
+tags: true
+repo: tuanpmt/esp_mqtt
