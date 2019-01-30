@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TargetSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Target>arm-linux-gnueabihf</Target>
+  <UserFriendlyName>Beaglebone-Debian</UserFriendlyName>
+  <SysrootSuffix>sysroot</SysrootSuffix>
+  <DisableSharedLibraries>false</DisableSharedLibraries>
+  <AdditionalArgs>--enable-languages=c,c++ --enable-shared --enable-linker-build-id --enable-threads=posix --enable-libstdcxx-debug --enable-libstdcxx-time=yes --enable-gnu-unique-object --disable-sjlj-exceptions --with-arch=armv7-a --with-fpu=vfpv3-d16 --with-float=hard --with-mode=thumb --enable-checking=release --with-abi=aapcs-linux</AdditionalArgs>
+  <Libc>
+    <Type>None</Type>
+  </Libc>
+  <XMLSupportInGDB>true</XMLSupportInGDB>
+</TargetSettings>

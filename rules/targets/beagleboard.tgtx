@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TargetSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Target>arm-angstrom-linux-gnueabi</Target>
+  <UserFriendlyName>Beagleboard</UserFriendlyName>
+  <SysrootSuffix>sysroot</SysrootSuffix>
+  <DisableSharedLibraries>false</DisableSharedLibraries>
+  <AdditionalArgs>--enable-shared --enable-languages=c,c++ --enable-threads=posix --disable-multilib --enable-c99 --enable-long-long --enable-symvers=gnu --enable-libstdcxx-pch --enable-lto --enable-libssp --disable-bootstrap --disable-libgomp --disable-libmudflap</AdditionalArgs>
+  <Libc>
+    <Type>None</Type>
+  </Libc>
+  <XMLSupportInGDB>true</XMLSupportInGDB>
+</TargetSettings>

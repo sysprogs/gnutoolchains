@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TargetSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Target>powerpc-linux</Target>
+  <UserFriendlyName>PowerPC Linux</UserFriendlyName>
+  <SysrootSuffix />
+  <DisableSharedLibraries>false</DisableSharedLibraries>
+  <AdditionalArgs>--enable-shared --enable-threads=posix --disable-multilib --enable-c99 --enable-long-long --enable-symvers=gnu --enable-libstdcxx-pch --program-prefix=powerpc-linux- --without-local-prefix --enable-lto --enable-libssp --disable-bootstrap --disable-libgomp --disable-libmudflap --with-system-zlib --with-linker-hash-style=gnu --with-ppl=no --with-cloog=no --enable-checking=release --enable-cheaders=c_global --with-sysroot=/q/gnu/auto/bu-2.23.1+gcc-4.7.2+gmp-4.2.4+mpfr-2.4.1+mpc-0.8+newlib-1.20.0-powerpc-linux/powerpc-linux/sysroot --disable-libunwind-exceptions --disable-libssp --disable-libgomp --disable-libmudflap --enable-nls --enable-__cxa_atexit --with-long-double-128</AdditionalArgs>
+  <Libc>
+    <Type>None</Type>
+  </Libc>
+  <XMLSupportInGDB>false</XMLSupportInGDB>
+</TargetSettings>

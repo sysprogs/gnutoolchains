@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TargetSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Target>arm-linux-gnueabihf</Target>
+  <UserFriendlyName>Raspberry-Jessie</UserFriendlyName>
+  <SysrootSuffix>sysroot</SysrootSuffix>
+  <DisableSharedLibraries>false</DisableSharedLibraries>
+  <AdditionalArgs>--enable-languages=c,c++ --enable-linker-build-id --enable-threads=posix --enable-libstdcxx-debug --enable-libstdcxx-time=yes --enable-gnu-unique-object --disable-libitm --disable-libquadmath --enable-plugin --with-arch-directory=arm --enable-multiarch --disable-sjlj-exceptions --with-arch=armv6 --with-fpu=vfp --with-float=hard --with-abi=aapcs-linux --disable-plugin</AdditionalArgs>
+  <Libc>
+    <Type>None</Type>
+  </Libc>
+  <XMLSupportInGDB>true</XMLSupportInGDB>
+</TargetSettings>

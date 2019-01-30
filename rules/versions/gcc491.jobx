@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BuildJob xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Build>
+    <LocalDirectory>q:\gnu\auto</LocalDirectory>
+    <OutputDirectory>q:\gnu\out</OutputDirectory>
+    <SiteDirectory>E:\sysprogs-site\toolchains</SiteDirectory>
+    <ExtraFilesDirectory>E:\PROJECTS\sysprogs\support\ToolchainFiles </ExtraFilesDirectory>
+  </Build>
+  <Target>
+    <DisableSharedLibraries>false</DisableSharedLibraries>
+    <Libc>
+      <Type>Glibc</Type>
+    </Libc>
+    <XMLSupportInGDB>false</XMLSupportInGDB>
+  </Target>
+  <Binutils>
+    <BinutilsVersion>2.24</BinutilsVersion>
+  </Binutils>
+  <GCC>
+    <GCCVersion>4.9.1</GCCVersion>
+    <GMPVersion>4.2.4</GMPVersion>
+    <MPFRVersion>2.4.1</MPFRVersion>
+    <MPCVersion>0.8</MPCVersion>
+  </GCC>
+  <GDB>
+    <GDBVersion>7.8</GDBVersion>
+  </GDB>
+  <ParalleliationLevel>1</ParalleliationLevel>
+  <NoParallelGCC>false</NoParallelGCC>
+</BuildJob>
