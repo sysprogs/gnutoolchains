@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<SysrootInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CompatibleSDCardImage>http://director.downloads.raspberrypi.org/raspbian_full/images/raspbian_full-2018-11-15/2018-11-13-raspbian-stretch-full.zip</CompatibleSDCardImage>
+  <TargetVersionCheckCommand>lsb_release -c</TargetVersionCheckCommand>
+  <TargetVersionCheckRegex>Codename:[ \t]+stretch</TargetVersionCheckRegex>
+  <HostNameOfOrigin>raspberrypi</HostNameOfOrigin>
+  <SynchronizedDirectories>
+    <string>/lib</string>
+    <string>/opt</string>
+    <string>/usr/include</string>
+    <string>/usr/lib</string>
+    <string>/usr/local/include</string>
+    <string>/usr/local/lib</string>
+  </SynchronizedDirectories>
+</SysrootInfo>
