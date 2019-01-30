@@ -1,6 +1,6 @@
 [submodule "tools/bazislib"]
-	path = tools/bazislib
+	path = tools/installer/bazislib
 	url = https://github.com/sysprogs/bazislib
 [submodule "tools/7zip"]
-	path = tools/7zip
+	path = tools/installer/7zip
 	url = https://github.com/kornelski/7z
