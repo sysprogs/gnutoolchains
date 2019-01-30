@@ -62,9 +62,9 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 
 	String fn;
 #if _DEBUG
-	size_t offset = 756224;
-#else
 	size_t offset = 758272;
+#else
+	size_t offset = 821248;
 #endif
 
 
@@ -232,7 +232,7 @@ public:
 		ReportProgress(done, total);
 	}
 
-	virtual void OnCompleted(ActionStatus status)
+	virtual void OnCompleted(ActionStatus status, BazisLib::String extraInfo)
 	{
 		ReportStatus(status);
 	}

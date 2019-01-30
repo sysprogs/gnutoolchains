@@ -21,12 +21,89 @@ static String UTF8StringToString(const TempStringA &str)
 	return ret;
 }
 
+static bool ClearReadOnlyAttributes(const String &fn)
+{
+	DWORD attr = GetFileAttributes(fn.c_str());
+	if (attr != INVALID_FILE_ATTRIBUTES && (attr & (FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_SYSTEM)))
+	{
+		SetFileAttributes(fn.c_str(), attr & ~(FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_SYSTEM));
+		return true;
+	}
+
+	return false;
+}
+
+static ActionStatus HardlinkOrCopyFile(BazisLib::String fnOrig, BazisLib::String fnNew, bool canHardlink, BazisLib::File &logFile, BazisLib::String &errorInfo)
+{
+	DWORD existingAttr = GetFileAttributes(fnNew.c_str());
+	if (existingAttr != INVALID_FILE_ATTRIBUTES)
+	{
+		if (logFile.Valid())
+			logFile.WriteLine(BazisLib::DynamicString::sFormat(L"Deleting old %s...", fnNew.c_str()));
+		ClearReadOnlyAttributes(fnNew);
+		File::Delete(fnNew);
+	}
+
+	if (canHardlink && CreateHardLink(fnNew.c_str(), fnOrig.c_str(), NULL))
+	{
+		if (logFile.Valid())
+			logFile.WriteLine(BazisLib::DynamicString::sFormat(L"Hardlinked %s => %s", fnOrig.c_str(), fnNew.c_str()));
+		return MAKE_STATUS(Success);
+	}
+
+	if (logFile.Valid())
+		logFile.WriteLine(BazisLib::DynamicString::sFormat(L"Copying %s => %s", fnOrig.c_str(), fnNew.c_str()));
+
+
+	if (!CopyFile(fnOrig.c_str(), fnNew.c_str(), FALSE))
+	{
+		errorInfo = BazisLib::String::sFormat(L"Failed to copy %s to %s", fnOrig.c_str(), fnNew.c_str());
+
+		if (logFile.Valid())
+			logFile.WriteLine(BazisLib::DynamicString::sFormat(L"CopyFile(%s => %s): error %d", fnOrig.c_str(), fnNew.c_str(), GetLastError()));
+		return MAKE_STATUS(ActionStatus::FailFromLastError());
+	}
+
+	return MAKE_STATUS(Success);
+}
+
+static ActionStatus CopyDirectoryRecursively(BazisLib::String originalPath, BazisLib::String newPath, BazisLib::File &logFile, BazisLib::String &errorInfo, bool canHardlink)
+{
+	Directory dir(originalPath);
+	Directory::Create(newPath);
+
+	for (Directory::enumerator iter = dir.FindFirstFile(); iter.Valid(); iter.Next())
+	{
+		if (iter.IsAPseudoEntry())
+			continue;
+
+		BazisLib::String fnOrig = originalPath + L"\\" + iter.GetRelativePath();
+		BazisLib::String fnNew = newPath + L"\\" + iter.GetRelativePath();
+
+		if (logFile.Valid())
+			logFile.WriteLine(BazisLib::DynamicString::sFormat(L"Copying %s to %s", fnOrig.c_str(), fnNew.c_str()));
+
+		if (iter.IsDirectory())
+		{
+			ActionStatus st = CopyDirectoryRecursively(fnOrig, fnNew, logFile, errorInfo, canHardlink);
+			if (!st.Successful())
+				return st;
+		}
+		else
+		{
+			ActionStatus st = HardlinkOrCopyFile(fnOrig, fnNew, canHardlink, logFile, errorInfo);
+		}
+	}
+
+	return MAKE_STATUS(Success);
+}
+
 struct IInstallerCallbacks
 {
 public:
-	virtual void OnProgress(ULONGLONG total, ULONGLONG done, double ratio)=0;
-	virtual void OnCompleted(ActionStatus status)=0;
-	virtual void UpdateProgressText(const String &text)=0;
+	virtual void OnProgress(ULONGLONG total, ULONGLONG done, double ratio) = 0;
+	virtual void OnCompleted(ActionStatus status, BazisLib::String extraInfo) = 0;
+	virtual void UpdateProgressText(const String &text) = 0;
 };
 
 struct InstallationParameters
@@ -96,7 +173,7 @@ public:
 			return;
 		_StringBuffer.SetSize(_Header.StringBlockSize);
 
-		for(size_t i = 0; i < _Files.GetUsed(); i++)
+		for (size_t i = 0; i < _Files.GetUsed(); i++)
 		{
 			if (_Files[i].NameOffset >= _StringBuffer.GetSize())
 				return;
@@ -111,7 +188,7 @@ public:
 		delete m_pInstallerThread;
 	}
 
-	bool Valid() {return _Valid;}
+	bool Valid() { return _Valid; }
 
 private:
 	IInstallerCallbacks *_pCallbacks;
@@ -127,10 +204,12 @@ private:
 		File *_pCurrentFile;
 
 		BazisLib::File &_LogFile;
+		BazisLib::String &_LastMeaningfulError;
 
 	public:
-		CallbackWrapper(ToolchainInstaller *pInstaller, BazisLib::File &logFile)
+		CallbackWrapper(ToolchainInstaller *pInstaller, BazisLib::File &logFile, BazisLib::String &extraInfoBuffer)
 			: _LogFile(logFile)
+			, _LastMeaningfulError(extraInfoBuffer)
 		{
 			_pInstaller = pInstaller;
 			_CurrentlyWrittenFile = 0;
@@ -208,11 +287,23 @@ private:
 						ASSERT(!_CurrentFileOffset);
 						ActionStatus st;
 						_pCurrentFile = new File(fn, FileModes::CreateOrTruncateRW, &st);
+						if (!st.Successful())
+						{
+							if (ClearReadOnlyAttributes(fn))
+							{
+								delete _pCurrentFile;
+								_pCurrentFile = new File(fn, FileModes::CreateOrTruncateRW, &st);
+							}
+						}
+
 						if (_LogFile.Valid())
 							_LogFile.WriteLine(BazisLib::DynamicString::sFormat(L"[%d] CreateFile(%s) => %d", _CurrentlyWrittenFile, fn.c_str(), st.GetErrorCode()));
 
 						if (!st.Successful())
+						{
+							_LastMeaningfulError = BazisLib::String::sFormat(L"Failed to create %s: %s", fn.c_str(), st.GetMostInformativeText().c_str());
 							return st.ConvertToHResult();
+						}
 					}
 
 					ULONGLONG remaining = rec.SizeInBytes - _CurrentFileOffset;
@@ -222,7 +313,7 @@ private:
 
 					if (_pCurrentFile->Write(pData, todo) != todo)
 						return HRESULT_FROM_WIN32(ERROR_IO_DEVICE);
-					
+
 					_CurrentFileOffset += todo;
 					size -= todo;
 					pData += todo;
@@ -244,7 +335,7 @@ private:
 						_pCurrentFile = NULL;
 
 						String fn = Path::Combine(_pInstaller->_Parameters.TargetDirectory, UTF8StringToString(DynamicStringA((const char *)_pInstaller->_StringBuffer.GetData(rec.NameOffset))));
-						
+
 						if (rec.Info.Attributes)
 							SetFileAttributes(fn.c_str(), rec.Info.Attributes);
 
@@ -256,10 +347,10 @@ private:
 			return S_OK;
 		}
 
-		virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID, void **ppvObject) {return E_NOINTERFACE;}
-		virtual ULONG STDMETHODCALLTYPE AddRef( void) {return InterlockedIncrement(&m_ReferenceCount);}
+		virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID, void **ppvObject) { return E_NOINTERFACE; }
+		virtual ULONG STDMETHODCALLTYPE AddRef(void) { return InterlockedIncrement(&m_ReferenceCount); }
 		//Reference counter is not actually used
-		virtual ULONG STDMETHODCALLTYPE Release( void) {return InterlockedDecrement(&m_ReferenceCount);}
+		virtual ULONG STDMETHODCALLTYPE Release(void) { return InterlockedDecrement(&m_ReferenceCount); }
 	};
 
 	class FileWrapper : public ISequentialOutStream, public ISequentialInStream
@@ -292,10 +383,10 @@ private:
 
 
 		//IUnknown methods
-		virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID, void **ppvObject) {return E_NOINTERFACE;}
-		virtual ULONG STDMETHODCALLTYPE AddRef( void) {return InterlockedIncrement(&m_ReferenceCount);}
+		virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID, void **ppvObject) { return E_NOINTERFACE; }
+		virtual ULONG STDMETHODCALLTYPE AddRef(void) { return InterlockedIncrement(&m_ReferenceCount); }
 		//Reference counter is not actually used
-		virtual ULONG STDMETHODCALLTYPE Release( void) {return InterlockedDecrement(&m_ReferenceCount);}
+		virtual ULONG STDMETHODCALLTYPE Release(void) { return InterlockedDecrement(&m_ReferenceCount); }
 	};
 
 	ActionStatus CreateDirectoryRecursive(String dir)
@@ -317,8 +408,9 @@ private:
 		return Directory::Create(dir);
 	}
 
-	ActionStatus DoInstall()
+	ActionStatus DoInstall(BazisLib::String &extraInfo)
 	{
+		extraInfo = L"";
 		if (_pCallbacks)
 			_pCallbacks->UpdateProgressText(_T("Preparing..."));
 
@@ -344,7 +436,7 @@ private:
 		if (_pCallbacks)
 			_pCallbacks->UpdateProgressText(_T("Unpacking..."));
 
-		CallbackWrapper wrp(this, logFile);
+		CallbackWrapper wrp(this, logFile, extraInfo);
 		FileWrapper file(&_File);
 		UInt64 size = _Header.CompressedBlockLength, outSize = _TotalFileSize;
 		HRESULT hR = pDecoder->Code(&file, &wrp, &size, &outSize, &wrp);
@@ -372,32 +464,24 @@ private:
 			else
 				idx++;
 
-			if (_Parameters.CreateHardlinks)
+			DWORD attr = GetFileAttributes(fnOrig.c_str());
+			ActionStatus st;
+			if ((attr != INVALID_FILE_ATTRIBUTES) && (attr & FILE_ATTRIBUTE_DIRECTORY))
+			{
+				if (_pCallbacks)
+					_pCallbacks->UpdateProgressText(L"Copying " + fnNew.substr(idx) + L"...");
+				st = CopyDirectoryRecursively(fnOrig, fnNew, logFile, extraInfo, _Parameters.CreateHardlinks);
+			}
+			else
 			{
 				if (_pCallbacks)
 					_pCallbacks->UpdateProgressText(L"Hardlinking " + fnNew.substr(idx) + L"...");
 
-				if (!CreateHardLink(fnNew.c_str(), fnOrig.c_str(), NULL))
-					doCopy = true;
-
-				if (logFile.Valid())
-					logFile.WriteLine(BazisLib::DynamicString::sFormat(L"%s => %s: %s", fnOrig.c_str(), fnNew.c_str(), doCopy ? L"failed" : L"ok"));
+				st = HardlinkOrCopyFile(fnOrig, fnNew, _Parameters.CreateHardlinks, logFile, extraInfo);
 			}
-			else
-				doCopy = true;
 
-			if (doCopy)
-			{
-				if (_pCallbacks)
-					_pCallbacks->UpdateProgressText(L"Copying " + fnNew.substr(idx) + L"...");
-
-				if (!CopyFile(fnOrig.c_str(), fnNew.c_str(), FALSE))
-				{
-					if (logFile.Valid())
-						logFile.WriteLine(BazisLib::DynamicString::sFormat(L"CopyFile(%s => %s): error %d", fnOrig.c_str(), fnNew.c_str(), GetLastError()));
-					return MAKE_STATUS(ActionStatus::FailFromLastError());
-				}
-			}
+			if (!st.Successful())
+				return st;
 		}
 
 		if (logFile.Valid())
@@ -492,9 +576,10 @@ private:
 
 	int InstallationThreadBody()
 	{
-		ActionStatus st = DoInstall();
+		BazisLib::String info;
+		ActionStatus st = DoInstall(info);
 		if (_pCallbacks)
-			_pCallbacks->OnCompleted(st);
+			_pCallbacks->OnCompleted(st, info);
 		return st.ConvertToHResult();
 	}
 
@@ -512,7 +597,7 @@ public:
 	}
 
 
-	const ToolchainArchiveHeader *GetHeader() 
+	const ToolchainArchiveHeader *GetHeader()
 	{
 		return &_Header;
 	}

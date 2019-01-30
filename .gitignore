@@ -4,3 +4,4 @@ Release
 Debug (Win32)
 Release (Win32)
 *.aps
+/tools/installer/LzmaLib/*.user

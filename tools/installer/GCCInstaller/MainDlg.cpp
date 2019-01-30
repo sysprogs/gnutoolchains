@@ -147,8 +147,9 @@ void CMainDlg::OnProgress( ULONGLONG total, ULONGLONG done, double ratio )
 	::PostMessage(GetDlgItem(IDC_PROGRESS1), PBM_SETPOS, (int)(ratio * 1000), 0);
 }
 
-void CMainDlg::OnCompleted( ActionStatus status )
+void CMainDlg::OnCompleted( ActionStatus status, BazisLib::String extraErrorInfo)
 {
+	_ExtraErrorInfo = extraErrorInfo;
 	::EnableWindow(GetDlgItem(IDOK), TRUE);
 	EnableSelectionGUI(true);
 	SendMessage(WMX_STATUS, 0, (LPARAM)&status);
@@ -172,7 +173,12 @@ LRESULT CMainDlg::OnCustomError( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam
 			EndDialog(0);
 		}
 		else
-			MessageBox(pStatus->GetMostInformativeText().c_str(), NULL, MB_ICONERROR);
+		{
+			if (!_ExtraErrorInfo.empty())
+				MessageBox(_ExtraErrorInfo.c_str(), NULL, MB_ICONERROR);
+			else
+				MessageBox(pStatus->GetMostInformativeText().c_str(), NULL, MB_ICONERROR);
+		}
 	}
 	return 0;
 }

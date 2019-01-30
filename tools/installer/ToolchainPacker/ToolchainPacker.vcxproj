@@ -92,7 +92,7 @@
     <ClCompile Include="ToolchainPacker.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\sysprogs-github\BazisLib\bzscore\bzscore.vcxproj">
+    <ProjectReference Include="..\bazislib\bzscore\bzscore.vcxproj">
       <Project>{a009693f-aadd-42cf-8e6e-f7bbf5601e5c}</Project>
     </ProjectReference>
     <ProjectReference Include="..\LzmaLib\LzmaLib.vcxproj">
