@@ -1,0 +1,229 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "atlres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Neutral resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+#pragma code_page(1252)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+1                       BITMAP                  "..\\splash.bmp"
+
+#endif    // Neutral resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Neutral (Default) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEUD)
+LANGUAGE LANG_NEUTRAL, SUBLANG_DEFAULT
+#pragma code_page(1252)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// LICENSE
+//
+
+GPL                     LICENSE                 "..\\gpl.txt"
+
+#endif    // Neutral (Default) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""atlres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\GCCInstaller.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_MAINDLG DIALOGEX 0, 0, 487, 230
+STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_CAPTION | WS_SYSMENU
+CAPTION "Install GNU Toolchain"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "Install",IDOK,368,209,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,430,209,50,14
+    LTEXT           "Directory:",IDC_STATIC,122,48,31,8
+    EDITTEXT        IDC_EDIT1,158,46,173,14,ES_AUTOHSCROLL
+    CONTROL         "Current user",IDC_LOCALUSER,"Button",BS_AUTORADIOBUTTON,131,74,54,10
+    CONTROL         "All users",IDC_ALLUSERS,"Button",BS_AUTORADIOBUTTON,131,89,42,10
+    CONTROL         "Hardlink duplicate files",IDC_HARDLINK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,215,74,87,10
+    CONTROL         "",IDC_PROGRESS1,"msctls_progress32",WS_BORDER,126,190,354,14
+    LTEXT           "Install for:",IDC_STATIC,123,61,31,8
+    CONTROL         "Add binary directory to %PATH%",IDC_ADDTOPATH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,215,89,118,10
+    CONTROL         "I accept the terms of the license agreement",IDC_AGREE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,126,174,152,10
+    CTEXT           "GNU toolchain for arm-elf [font size will be bigger]",IDC_CAPTION,115,7,365,30
+    PUSHBUTTON      "...",IDC_BROWSE,332,46,23,14
+    LTEXT           "License agreement:",IDC_STATIC,127,108,63,8
+    EDITTEXT        IDC_EDIT2,124,121,356,47,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL
+    CONTROL         IDOK,IDC_STATIC,"Static",SS_BITMAP,7,7,106,215
+    LTEXT           "Binutils version:",IDC_STATIC,375,59,50,8
+    LTEXT           "GCC version:",IDC_STATIC,375,73,42,8
+    LTEXT           "GDB version:",IDC_STATIC,375,87,43,8
+    LTEXT           "Newlib version:",IDC_NEWLIB_LBL,375,100,49,8
+    LTEXT           "2.20.1",IDC_BINUTILS,434,59,44,8
+    LTEXT           "4.7",IDC_GCC,435,73,44,8
+    LTEXT           "7.4",IDC_GDB,434,87,44,8
+    LTEXT           "1.20",IDC_NEWLIB,434,100,44,8
+    GROUPBOX        "Toolchain summary",IDC_STATIC,361,45,115,72
+    LTEXT           "",IDC_PROGRESSTEXT,127,211,236,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_MAINDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 480
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 223
+        HORZGUIDE, 7
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS
+BEGIN
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY 
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "Sysprogs UG (haftungsbeschraenkt)"
+            VALUE "FileDescription", "GNU Toolchain Installer"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "GCCInstaller"
+            VALUE "LegalCopyright", "Copyright 2012 Sysprogs UG (haftungsbeschraenkt)"
+            VALUE "OriginalFilename", "GCCInstaller.exe"
+            VALUE "ProductName", "VisualGDB"
+            VALUE "ProductVersion", "1, 1, 0, 1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_MAINDLG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+

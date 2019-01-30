@@ -1,0 +1,6 @@
+[submodule "tools/bazislib"]
+	path = tools/bazislib
+	url = https://github.com/sysprogs/bazislib
+[submodule "tools/7zip"]
+	path = tools/7zip
+	url = https://github.com/kornelski/7z

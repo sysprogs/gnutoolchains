@@ -1,0 +1,283 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Spec">
+      <UniqueIdentifier>{6fdddb9a-d7a0-4ae6-9d5e-00cba5b3c279}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compress">
+      <UniqueIdentifier>{12c26749-d518-4b6c-9e2f-21d83d9b9f37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows">
+      <UniqueIdentifier>{d04ddbc0-96be-418d-8727-354c2985a07e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{e0d5fb00-bb2b-4b7e-acc4-f05572da8f44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="7zip Common">
+      <UniqueIdentifier>{630a78f8-7dce-4f45-9aa8-bab85d9ce38b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI Common">
+      <UniqueIdentifier>{28b793bf-3611-4fe9-a793-870db7075ceb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Console">
+      <UniqueIdentifier>{45b0f470-5689-418c-ac05-6fe9cdf159b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C">
+      <UniqueIdentifier>{d7d47933-a3ba-4aff-ad1f-feafb93cdc7e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\StdAfx.cpp">
+      <Filter>Spec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\Compress\LzmaDecoder.cpp">
+      <Filter>Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\Compress\LzmaEncoder.cpp">
+      <Filter>Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\Compress\LzmaRegister.cpp">
+      <Filter>Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Windows\FileIO.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Windows\Synchronization.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Windows\System.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\CommandLineParser.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\CRC.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\IntToString.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\MyString.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\MyVector.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\MyWindows.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\NewHandler.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\StringConvert.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\StringToInt.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\Common\CreateCoder.cpp">
+      <Filter>7zip Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\Common\CWrappers.cpp">
+      <Filter>7zip Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\Common\FileStreams.cpp">
+      <Filter>7zip Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\Common\FilterCoder.cpp">
+      <Filter>7zip Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\Common\StreamUtils.cpp">
+      <Filter>7zip Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\UI\Common\Bench.cpp">
+      <Filter>UI Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\UI\Common\LoadCodecs.cpp">
+      <Filter>UI Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\UI\Console\BenchCon.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\UI\Console\ConsoleClose.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\7zCrc.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\7zCrcOpt.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\Alloc.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\Bra.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\Bra86.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\BraIA64.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\CpuArch.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\LzFind.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\LzFindMt.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\Lzma86Dec.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\Lzma86Enc.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\LzmaDec.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\LzmaEnc.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\Threads.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Bundles\LzmaCon\LzmaAlone.cpp" />
+    <ClCompile Include="..\7zip\CPP\Windows\PropVariant.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\Common\CrcReg.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\7zip\CPP\7zip\Common\MethodProps.cpp">
+      <Filter>7zip Common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\StdAfx.h">
+      <Filter>Spec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\Compress\LzmaDecoder.h">
+      <Filter>Compress</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\Compress\LzmaEncoder.h">
+      <Filter>Compress</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Windows\FileIO.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Windows\Synchronization.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Windows\System.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Windows\Thread.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\CommandLineParser.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\ComTry.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\Defs.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\IntToString.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\MyCom.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\MyString.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\MyUnknown.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\MyVector.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\MyWindows.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\NewHandler.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\StringConvert.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\StringToInt.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\Common\Types.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\Common\CreateCoder.h">
+      <Filter>7zip Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\Common\CWrappers.h">
+      <Filter>7zip Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\Common\FileStreams.h">
+      <Filter>7zip Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\Common\FilterCoder.h">
+      <Filter>7zip Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\Common\StreamUtils.h">
+      <Filter>7zip Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\UI\Common\Bench.h">
+      <Filter>UI Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\UI\Common\LoadCodecs.h">
+      <Filter>UI Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\UI\Console\BenchCon.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\UI\Console\ConsoleClose.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\7zCrc.h">
+      <Filter>C</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\Alloc.h">
+      <Filter>C</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\Bra.h">
+      <Filter>C</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\CpuArch.h">
+      <Filter>C</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\LzFind.h">
+      <Filter>C</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\LzFindMt.h">
+      <Filter>C</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\LzHash.h">
+      <Filter>C</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\Lzma86.h">
+      <Filter>C</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\LzmaDec.h">
+      <Filter>C</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\LzmaEnc.h">
+      <Filter>C</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\Threads.h">
+      <Filter>C</Filter>
+    </ClInclude>
+    <ClInclude Include="..\7zip\CPP\7zip\Bundles\LzmaCon\..\..\..\..\C\Types.h">
+      <Filter>C</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
