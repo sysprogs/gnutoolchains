@@ -102,7 +102,7 @@ struct IInstallerCallbacks
 {
 public:
 	virtual void OnProgress(ULONGLONG total, ULONGLONG done, double ratio) = 0;
-	virtual void OnCompleted(ActionStatus status, BazisLib::String extraInfo) = 0;
+	virtual void OnCompleted(ActionStatus status, BazisLib::String extraInfo, bool hasWarnings) = 0;
 	virtual void UpdateProgressText(const String &text) = 0;
 };
 
@@ -189,6 +189,20 @@ public:
 	}
 
 	bool Valid() { return _Valid; }
+
+	struct FailedFile
+	{
+		BazisLib::String Path, Error;
+
+		FailedFile(const BazisLib::String &path, const BazisLib::String &error)
+			: Path(path)
+			, Error(error)
+		{
+		}
+	};
+
+	std::list<FailedFile> _FailedFiles;
+	int _SucceededFiles = 0;
 
 private:
 	IInstallerCallbacks *_pCallbacks;
@@ -301,9 +315,12 @@ private:
 
 						if (!st.Successful())
 						{
-							_LastMeaningfulError = BazisLib::String::sFormat(L"Failed to create %s: %s", fn.c_str(), st.GetMostInformativeText().c_str());
-							return st.ConvertToHResult();
+							_pInstaller->_FailedFiles.emplace_back(fn, st.GetMostInformativeText());
+							delete _pCurrentFile;
+							_pCurrentFile = nullptr;
 						}
+						else
+							_pInstaller->_SucceededFiles++;
 					}
 
 					ULONGLONG remaining = rec.SizeInBytes - _CurrentFileOffset;
@@ -311,7 +328,7 @@ private:
 					if (todo > remaining)
 						todo = (size_t)remaining;
 
-					if (_pCurrentFile->Write(pData, todo) != todo)
+					if (_pCurrentFile && _pCurrentFile->Write(pData, todo) != todo)
 						return HRESULT_FROM_WIN32(ERROR_IO_DEVICE);
 
 					_CurrentFileOffset += todo;
@@ -481,7 +498,7 @@ private:
 			}
 
 			if (!st.Successful())
-				return st;
+				_FailedFiles.emplace_back(fnNew, st.GetMostInformativeText());
 		}
 
 		if (logFile.Valid())
@@ -571,6 +588,14 @@ private:
 
 		if (logFile.Valid())
 			logFile.WriteLine(BazisLib::DynamicString::sFormat(L"Installation complete"));
+
+		if (!_FailedFiles.empty())
+		{
+			File warningFile(BazisLib::Path::Combine(_Parameters.TargetDirectory, L"warnings.txt"), BazisLib::CreateOrTruncateRW);
+			for (const auto &rec : _FailedFiles)
+				logFile.WriteLine(BazisLib::DynamicString::sFormat(L"%s: %s\r\n", rec.Path.c_str(), rec.Error.c_str()));
+		}
+
 		return MAKE_STATUS(Success);
 	}
 
@@ -579,7 +604,15 @@ private:
 		BazisLib::String info;
 		ActionStatus st = DoInstall(info);
 		if (_pCallbacks)
-			_pCallbacks->OnCompleted(st, info);
+		{
+			if ((_FailedFiles.size() > _SucceededFiles / 10) && st.Successful())
+			{
+				st = MAKE_STATUS(UnknownError);
+				info = BazisLib::String::sFormat(L"%d files could not be installed. Try running the installer with the /LOG parameter.", (int)_FailedFiles.size());
+			}
+
+			_pCallbacks->OnCompleted(st, info, !_FailedFiles.empty());
+		}
 		return st.ConvertToHResult();
 	}
 

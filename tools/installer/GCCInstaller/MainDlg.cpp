@@ -147,9 +147,10 @@ void CMainDlg::OnProgress( ULONGLONG total, ULONGLONG done, double ratio )
 	::PostMessage(GetDlgItem(IDC_PROGRESS1), PBM_SETPOS, (int)(ratio * 1000), 0);
 }
 
-void CMainDlg::OnCompleted( ActionStatus status, BazisLib::String extraErrorInfo)
+void CMainDlg::OnCompleted( ActionStatus status, BazisLib::String extraErrorInfo, bool hasWarnings)
 {
 	_ExtraErrorInfo = extraErrorInfo;
+	_HasWarnings = hasWarnings;
 	::EnableWindow(GetDlgItem(IDOK), TRUE);
 	EnableSelectionGUI(true);
 	SendMessage(WMX_STATUS, 0, (LPARAM)&status);
@@ -169,7 +170,11 @@ LRESULT CMainDlg::OnCustomError( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam
 		if (pStatus->Successful())
 		{
 			SendDlgItemMessage(IDC_PROGRESS1, PBM_SETPOS, 1000, 0);
-			MessageBox(_T("Installation succeeded"), _T("Information"), MB_ICONINFORMATION);
+			if (_HasWarnings)
+				MessageBox(_T("Installation suceeded with some warnings. Please check warnings.txt for more details."), _T("Information"), MB_ICONINFORMATION);
+			else
+				MessageBox(_T("Installation succeeded"), _T("Information"), MB_ICONINFORMATION);
+
 			EndDialog(0);
 		}
 		else

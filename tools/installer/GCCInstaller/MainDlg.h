@@ -16,6 +16,7 @@ private:
 	bool _WriteLog;
 	
 	String m_LastStatus, _ExtraErrorInfo;
+	bool _HasWarnings;
 	Win32::CCriticalSection m_StatusLock;
 
 public:
@@ -54,7 +55,7 @@ public:
 	LRESULT OnBnClickedOk(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 
 	virtual void OnProgress(ULONGLONG total, ULONGLONG done, double percentage);
-	virtual void OnCompleted(ActionStatus status, BazisLib::String extraErrorInfo);
+	virtual void OnCompleted(ActionStatus status, BazisLib::String extraErrorInfo, bool hasWarnings);
 	virtual void UpdateProgressText(const String &text);
 
 
