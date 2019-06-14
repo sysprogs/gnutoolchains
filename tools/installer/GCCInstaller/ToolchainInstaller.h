@@ -4,7 +4,7 @@
 #include <bzscore/string.h>
 #include <bzscore/autofile.h>
 #include "../ToolchainArchive/ArchiveFormat.h"
-#include "../../../imported/lzma/CPP/7zip/Compress/LzmaDecoder.h"
+#include "../7zip/CPP/7zip/Compress/LzmaDecoder.h"
 #include <bzscore/thread.h>
 #include <bzscore/Win32/registry.h>
 

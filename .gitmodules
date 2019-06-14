@@ -1,3 +1,9 @@
 [submodule "tools/bazislib"]
 	path = tools/installer/bazislib
 	url = https://github.com/sysprogs/bazislib
+[submodule "tools/installer/7zip"]
+	path = tools/installer/7zip
+	url = https://github.com/kornelski/7z
+[submodule "tools/installer/wtl"]
+	path = tools/installer/wtl
+	url = https://github.com/ngugc/WTL
