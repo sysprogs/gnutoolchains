@@ -296,7 +296,7 @@ public:
 				serializedEntry.OriginalNameOffset = knownStrings[entry.OriginalRelativePath];
 				if (!serializedEntry.OriginalNameOffset)
 				{
-					printf("Unknown path: %S\n", entry.OriginalRelativePath.c_str());
+					printf("Unknown path \"%S\" referenced from %S\n", entry.OriginalRelativePath.c_str(), entry.TargetRelativePath.c_str());
 					fflush(stdout);
 					__asm int 3;
 				}
