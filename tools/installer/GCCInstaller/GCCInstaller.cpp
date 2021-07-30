@@ -64,7 +64,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 #if _DEBUG
 	size_t offset = 758272;
 #else
-	size_t offset = 846336;
+	size_t offset = 848384;
 #endif
 
 
