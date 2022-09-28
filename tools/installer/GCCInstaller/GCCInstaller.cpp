@@ -9,6 +9,16 @@
 
 CAppModule _Module;
 
+size_t GetExeSize(const void *pImage)
+{
+	PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)pImage;
+	PIMAGE_NT_HEADERS pNTHeaders = (PIMAGE_NT_HEADERS)((DWORD)pImage + pDosHeader->e_lfanew);
+	PIMAGE_SECTION_HEADER pSectionList = (PIMAGE_SECTION_HEADER)(pNTHeaders + 1);
+	int lastSection = pNTHeaders->FileHeader.NumberOfSections - 1;
+	
+	return pSectionList[lastSection].PointerToRawData + pSectionList[lastSection].SizeOfRawData;
+}
+
 int InstallUnattended(String &fn, size_t offset, wchar_t *pDirectory, wchar_t *pProgressToken, bool bAlreadyElevated, LPTSTR lpCommandLine, bool allUsers, bool writeLog);
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpstrCmdLine, int /*nCmdShow*/)
@@ -61,12 +71,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 	}
 
 	String fn;
-#if _DEBUG
-	size_t offset = 758272;
-#else
-	size_t offset = 848384;
-#endif
-
+	size_t offset = GetExeSize((void *)GetModuleHandle(NULL));
 
 	if (pFN)
 	{
