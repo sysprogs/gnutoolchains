@@ -150,8 +150,10 @@ private:
 	bool AreFilesEqual(const String &fn1, const String &fn2)
 	{
 		File f1(fn1, FileModes::OpenReadOnly), f2(fn2, FileModes::OpenReadOnly);
-		if (!f1.Valid() || !f2.Valid())
-			throw String(_T("Can't open file(s)"));
+		if (!f1.Valid())
+			throw String(_T("Can't open ") + fn1);
+		if (!f2.Valid())
+			throw String(_T("Can't open ") + fn2);
 
 		if (f1.GetSize() != f2.GetSize())
 			return false;
@@ -169,9 +171,9 @@ private:
 
 			size_t todo = (size_t)remaining;
 			if (f1.Read(buf1.GetData(), todo) != todo)
-				throw new String(_T("Cannot read first file"));
+				throw new String(_T("Cannot read ") + fn1);
 			if (f2.Read(buf2.GetData(), todo) != todo)
-				throw new String(_T("Cannot read second file"));
+				throw new String(_T("Cannot read ") + fn2);
 
 			if (memcmp(buf1.GetData(), buf2.GetData(), todo))
 				return false;
@@ -215,6 +217,9 @@ public:
 					continue;
 
 				if (it2->FileSize != it1->FileSize)
+					continue;
+
+				if (it1->IsDirectory || it2->IsDirectory)
 					continue;
 
 				if (AreFilesEqual(Path::Combine(_Directory, it1->RelativePath), Path::Combine(_Directory, it2->RelativePath)))

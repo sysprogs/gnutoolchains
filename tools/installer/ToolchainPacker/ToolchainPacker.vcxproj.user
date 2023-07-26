@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LocalDebuggerCommandArguments>E:\sysgcc\raspberry e:\temp\tc gcc=5</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>E:\sysgcc\raspberry F:\ReleasedPackages\toolchains\raspberry\raspberry-gcc10.2.1-r2.exe gcc=10.2.1 bu=2.35.2 gdb=10.1 tag=SysGCC-arm-linux-gnueabihf-10.2.1 target=raspberry stub=E:\projects\sysprogs\external\public\gnutoolchains\tools\installer\Release\GCCInstaller.exe</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LocalDebuggerCommandArguments>E:\sysgcc\raspberry e:\temp\tc gcc=5</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>E:\sysgcc\raspberry F:\ReleasedPackages\toolchains\raspberry\raspberry-gcc10.2.1-r2.exe gcc=10.2.1 bu=2.35.2 gdb=10.1 tag=SysGCC-arm-linux-gnueabihf-10.2.1 target=raspberry stub=E:\projects\sysprogs\external\public\gnutoolchains\tools\installer\Release\GCCInstaller.exe</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

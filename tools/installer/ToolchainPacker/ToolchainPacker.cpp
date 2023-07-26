@@ -35,7 +35,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	printf("Scanning %S...\n", job.Directory);
 	ToolchainScanner scanner(job.Directory);
 	printf("Found %d files. Searching for duplicates...\n", scanner.GetEntryCount());
-	scanner.SearchForDuplicates(_T("exe"));
+	try
+	{
+		scanner.SearchForDuplicates(NULL);
+	}
+	catch(String &str)
+	{
+		printf("Fatal error: %S\n", str.c_str());
+		return 1;
+	}
+
 	auto dups = scanner.GetDuplicates();
 	printf("Found %d duplicate files:\n", dups.size());
 	for each(auto entry in dups)
