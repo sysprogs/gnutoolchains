@@ -115,8 +115,17 @@ private:
 						int flags = *reinterpret_cast<unsigned *>(_TmpBuf + 16);
 						BazisLib::DynamicStringW str(reinterpret_cast<wchar_t *>(_TmpBuf + pathBufferOffset + nameOffset), nameLen / 2);
 						DuplicateEntry dupEntry;
-						dupEntry.TargetRelativePath = fn.substr(toolchainDir.length() + 1);
-						auto targetPath = Path::Combine(Path::GetDirectoryName(fn), str);
+
+						String resolvedFn = fn;
+						if (GetFinalPathNameByHandleW(file.GetHandleForSingleUse(), pathBuf, _countof(pathBuf), 0))
+							resolvedFn = pathBuf + 4; //Skip '\\?\'
+
+						if (_tcsnicmp(resolvedFn.c_str(), toolchainDir.c_str(), toolchainDir.size()))
+							throw String(_T("Resolved path is outside toolchain dir path: ") + resolvedFn);
+
+						dupEntry.TargetRelativePath = resolvedFn.substr(toolchainDir.length() + 1);
+						auto targetPath = Path::Combine(Path::GetDirectoryName(resolvedFn), str);
+
 						if (GetFullPathNameW(targetPath.c_str(), _countof(pathBuf), pathBuf, 0))
 						{
 							dupEntry.OriginalRelativePath = pathBuf + fullToolchainDirLen + 1;
