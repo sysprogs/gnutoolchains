@@ -19,11 +19,11 @@ struct VersionSummary
 	String ToolchainRegistryTag;
 };
 
-static DynamicStringA StringToUTF8String(const TempString &str)
+static DynamicStringA StringToUTF8String(const TempString& str)
 {
 #ifdef UNICODE
 	DynamicStringA ret;
-	char *pszStr = ret.PreAllocate(str.length() * 2, false);
+	char* pszStr = ret.PreAllocate(str.length() * 2, false);
 	if (!pszStr)
 		return ret;
 	size_t done = WideCharToMultiByte(CP_UTF8, 0, str.GetConstBuffer(), (unsigned)str.length(), pszStr, ret.GetAllocated(), NULL, NULL);
@@ -57,7 +57,7 @@ private:
 			FileSize = 0;
 		}
 
-		Entry(const String &relPath, bool isDir)
+		Entry(const String& relPath, bool isDir)
 		{
 			RelativePath = relPath;
 			IsDirectory = isDir;
@@ -79,8 +79,10 @@ private:
 	ULONGLONG _StubSize;
 	char _TmpBuf[65536];
 
+	CBuffer _BigBuf1, _BigBuf2;
+
 private:
-	void ScanDirectoryRecursive(const String &dir, const String &toolchainDir)
+	void ScanDirectoryRecursive(const String& dir, const String& toolchainDir)
 	{
 		wchar_t pathBuf[512];
 		int fullToolchainDirLen = 0;
@@ -88,7 +90,7 @@ private:
 			fullToolchainDirLen = wcslen(pathBuf);
 
 		for (BazisLib::Directory::enumerator it = BazisLib::Directory(dir).FindFirstFileW(); it.Valid(); it.Next())
-		{
+		{ 
 			if (it.IsAPseudoEntry())
 				continue;
 			String fn = it.GetFullPath();
@@ -107,23 +109,25 @@ private:
 				int done = file.DeviceIoControl(FSCTL_GET_REPARSE_POINT, NULL, 0, _TmpBuf, sizeof(_TmpBuf));
 				if (done >= 0)
 				{
-					if (*((unsigned *)_TmpBuf) == IO_REPARSE_TAG_SYMLINK)
+					if (*((unsigned*)_TmpBuf) == IO_REPARSE_TAG_SYMLINK)
 					{
 						int pathBufferOffset = 8 + 12;
-						int nameOffset = *reinterpret_cast<unsigned short *>(_TmpBuf + 8);
-						int nameLen = *reinterpret_cast<unsigned short *>(_TmpBuf + 10);
-						int flags = *reinterpret_cast<unsigned *>(_TmpBuf + 16);
-						BazisLib::DynamicStringW str(reinterpret_cast<wchar_t *>(_TmpBuf + pathBufferOffset + nameOffset), nameLen / 2);
+						int nameOffset = *reinterpret_cast<unsigned short*>(_TmpBuf + 8);
+						int nameLen = *reinterpret_cast<unsigned short*>(_TmpBuf + 10);
+						int flags = *reinterpret_cast<unsigned*>(_TmpBuf + 16);
+						BazisLib::DynamicStringW str(reinterpret_cast<wchar_t*>(_TmpBuf + pathBufferOffset + nameOffset), nameLen / 2);
 						DuplicateEntry dupEntry;
-
+						 
 						String resolvedFn = fn;
 						if (GetFinalPathNameByHandleW(file.GetHandleForSingleUse(), pathBuf, _countof(pathBuf), 0))
 							resolvedFn = pathBuf + 4; //Skip '\\?\'
 
+						if (_tcsnicmp(fn.c_str(), toolchainDir.c_str(), toolchainDir.size()))
+							throw String(_T("File path is outside toolchain dir path: ") + fn);
 						if (_tcsnicmp(resolvedFn.c_str(), toolchainDir.c_str(), toolchainDir.size()))
 							throw String(_T("Resolved path is outside toolchain dir path: ") + resolvedFn);
 
-						dupEntry.TargetRelativePath = resolvedFn.substr(toolchainDir.length() + 1);
+						dupEntry.TargetRelativePath = fn.substr(toolchainDir.length() + 1);
 						auto targetPath = Path::Combine(Path::GetDirectoryName(resolvedFn), str);
 
 						if (GetFullPathNameW(targetPath.c_str(), _countof(pathBuf), pathBuf, 0))
@@ -156,7 +160,7 @@ private:
 		}
 	}
 
-	bool AreFilesEqual(const String &fn1, const String &fn2)
+	bool AreFilesEqual(const String& fn1, const String& fn2)
 	{
 		File f1(fn1, FileModes::OpenReadOnly), f2(fn2, FileModes::OpenReadOnly);
 		if (!f1.Valid())
@@ -167,24 +171,23 @@ private:
 		if (f1.GetSize() != f2.GetSize())
 			return false;
 
-		CBuffer buf1, buf2;
-		buf1.EnsureSize(1024 * 1024);
-		buf2.EnsureSize(1024 * 1024);
+		_BigBuf1.EnsureSize(1024 * 1024);
+		_BigBuf2.EnsureSize(1024 * 1024);
 
 		ULONGLONG size = f1.GetSize(), done = 0;
 		while (done < size)
 		{
 			ULONGLONG remaining = size - done;
-			if (remaining > buf1.GetAllocated())
-				remaining = buf2.GetAllocated();
+			if (remaining > _BigBuf1.GetAllocated())
+				remaining = _BigBuf2.GetAllocated();
 
 			size_t todo = (size_t)remaining;
-			if (f1.Read(buf1.GetData(), todo) != todo)
+			if (f1.Read(_BigBuf1.GetData(), todo) != todo)
 				throw new String(_T("Cannot read ") + fn1);
-			if (f2.Read(buf2.GetData(), todo) != todo)
+			if (f2.Read(_BigBuf2.GetData(), todo) != todo)
 				throw new String(_T("Cannot read ") + fn2);
 
-			if (memcmp(buf1.GetData(), buf2.GetData(), todo))
+			if (memcmp(_BigBuf1.GetData(), _BigBuf2.GetData(), todo))
 				return false;
 
 			done += todo;
@@ -194,7 +197,7 @@ private:
 	}
 
 public:
-	ToolchainScanner(const String &directory)
+	ToolchainScanner(const String& directory)
 		: _Directory(directory)
 		, _StubSize(0)
 	{
@@ -202,12 +205,7 @@ public:
 	}
 
 	size_t GetEntryCount() { return _Entries.size(); }
-
-	std::list<DuplicateEntry> GetDuplicates()
-	{
-		return _Duplicates;
-	}
-
+	size_t GetSymlinkCount() { return _Symlinks.size(); }
 
 	void SearchForDuplicates(LPCTSTR lpExtension)
 	{
@@ -248,7 +246,7 @@ public:
 	}
 
 private:
-	template <size_t _Size> void WriteFixedField(char(&buffer)[_Size], const String &str)
+	template <size_t _Size> void WriteFixedField(char(&buffer)[_Size], const String& str)
 	{
 		auto ansiStr = StringToUTF8String(str);
 		size_t len = min(ansiStr.length(), _Size - 1);
@@ -257,14 +255,14 @@ private:
 	}
 
 public:
-	void ProduceArchiveHeaders(File &file, const VersionSummary &versions)
+	void ProduceArchiveHeaders(File& file, const VersionSummary& versions, File* pLogFile = nullptr)
 	{
 		_StubSize = file.Seek(0, FileFlags::FileCurrent);
 
 		CBuffer stringBuf;
 		stringBuf.EnsureSize(1);
 		stringBuf.SetSize(1);
-		*((char *)stringBuf.GetData()) = 0;
+		*((char*)stringBuf.GetData()) = 0;
 		std::map<String, unsigned> knownStrings;
 
 		ToolchainArchiveHeader hdr;
@@ -283,7 +281,11 @@ public:
 
 		file.Write(&hdr, sizeof(hdr));
 
-		for each(const Entry &entry in _Entries)
+		if (pLogFile)
+			pLogFile->WriteLine(DynamicString(L"=== Files ==="));
+
+
+		for each (const Entry & entry in _Entries)
 		{
 			FileEntry serializedEntry = { 0, };
 			if (entry.IsDirectory)
@@ -292,6 +294,9 @@ public:
 			serializedEntry.NameOffset = stringBuf.GetSize();
 			serializedEntry.Info = entry.Info;
 
+			if (pLogFile)
+				pLogFile->WriteLine(DynamicString::sFormat(L"[%c] %s: %d bytes", entry.IsDirectory ? 'D' : 'F', entry.RelativePath.c_str(), entry.FileSize));
+
 			auto str = StringToUTF8String(entry.RelativePath);
 			stringBuf.append(str.c_str(), str.length() + 1);
 			file.Write(&serializedEntry, sizeof(serializedEntry));
@@ -299,13 +304,19 @@ public:
 			knownStrings[entry.RelativePath] = serializedEntry.NameOffset;
 		}
 
-		std::list<DuplicateEntry> *pLists[2] = { &_Duplicates, &_Symlinks };
+		std::list<DuplicateEntry>* pLists[2] = { &_Duplicates, &_Symlinks };
 
-		for (auto *pList : pLists)
+		if (pLogFile)
+			pLogFile->WriteLine(DynamicString(L"=== Duplicates ==="));
+
+		for (auto* pList : pLists)
 		{
-			for (const DuplicateEntry &entry : *pList)
+			for (const DuplicateEntry& entry : *pList)
 			{
 				HardLinkEntry serializedEntry = { 0, };
+
+				if (pLogFile)
+					pLogFile->WriteLine(DynamicString::sFormat(L"%s => %s", entry.TargetRelativePath.c_str(), entry.OriginalRelativePath.c_str()));
 
 				serializedEntry.OriginalNameOffset = knownStrings[entry.OriginalRelativePath];
 				if (!serializedEntry.OriginalNameOffset)
@@ -337,9 +348,9 @@ public:
 		file.Seek(_StubSize + hdr.FileContentsOffset, FileFlags::FileBegin);
 	}
 
-	void ProduceUncompressedDataFile(File &file)
+	void ProduceUncompressedDataFile(File& file)
 	{
-		for each(const Entry &entry in _Entries)
+		for each (const Entry & entry in _Entries)
 		{
 			if (entry.IsDirectory)
 				continue;
@@ -357,7 +368,7 @@ public:
 		}
 	}
 
-	void SaveCompressedBlockSize(File &file, ULONGLONG blockLen)
+	void SaveCompressedBlockSize(File& file, ULONGLONG blockLen)
 	{
 		ToolchainArchiveHeader hdr;
 		file.Seek(_StubSize, FileFlags::FileBegin);

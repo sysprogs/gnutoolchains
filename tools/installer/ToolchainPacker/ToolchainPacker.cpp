@@ -32,9 +32,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	job.Directory = argv[1];
 	job.ArchiveFile = argv[2];
 
-	printf("Scanning %S...\n", job.Directory);
+	printf("Scanning %S...\n", job.Directory.c_str());
 	ToolchainScanner scanner(job.Directory);
-	printf("Found %d files. Searching for duplicates...\n", scanner.GetEntryCount());
+	printf("Found %d files + %d symlinks. Searching for duplicates...\n", scanner.GetEntryCount(), scanner.GetSymlinkCount());
 	try
 	{
 		scanner.SearchForDuplicates(NULL);
@@ -45,11 +45,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		return 1;
 	}
 
-	auto dups = scanner.GetDuplicates();
-	printf("Found %d duplicate files:\n", dups.size());
-	for each(auto entry in dups)
-		printf("  %S == %S\n", entry.OriginalRelativePath.c_str(), entry.TargetRelativePath.c_str());
-
+	File logFile(job.ArchiveFile + L".log", FileModes::CreateOrTruncateRW);
 	File archiveFile(job.ArchiveFile, FileModes::CreateOrTruncateRW);
 	VersionSummary versions;
 
@@ -99,7 +95,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		archiveFile.Write(buffer.GetData(), buffer.GetSize());
 	}
 
-	scanner.ProduceArchiveHeaders(archiveFile, versions);
+	scanner.ProduceArchiveHeaders(archiveFile, versions, &logFile);
 
 	ULONGLONG compressedStart = archiveFile.GetPosition();
 
